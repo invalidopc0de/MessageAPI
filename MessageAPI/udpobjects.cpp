@@ -29,25 +29,25 @@ UdpMessage::UdpMessage(QString user, QString message){
     setupUser(user, message, this->Unknown);
 }
 
-UdpMessage::UdpMessage(QString user, QString message, udpMessageType type){
+UdpMessage::UdpMessage(QString user, QString message, UdpMessageType type){
     setupUser(user, message, type);
 }
 
-UdpMessage::UdpMessage(UdpUser& user, QString message, udpMessageType type)
+UdpMessage::UdpMessage(UdpUser& user, QString message, UdpMessageType type)
 {
     IntendedUser = &user;
     Message = message;
     MessageType = type;
 }
 
-void UdpMessage::setupUser(QString user, QString userMessage, udpMessageType type)
+void UdpMessage::setupUser(QString user, QString userMessage, UdpMessageType type)
 {
     IntendedUser = new UdpUser(user);
     Message = userMessage;
     MessageType = type;
 }
 
-UdpMessage::udpMessageType UdpMessage::messageTypeFromString(QString type)
+UdpMessage::UdpMessageType UdpMessage::messageTypeFromString(QString type)
 {
     if(type == "1")
             return this->WebsiteShare;
