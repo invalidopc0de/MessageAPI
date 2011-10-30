@@ -5,12 +5,6 @@
 #include "broadcastservice.h"
 #include "stdlib.h"
 
-//! Broadcast Service Constructor
-/*!
-    This must be called before attempting to use a new BroadcastService
-    \param address the IP address that the BroadcastService will run on. (default: 255.255.255.255)
-    \param port the port that the BroadcastService will run on. (default: 5683)
-  */
 BroadcastService::BroadcastService(QString address = "255.255.255.255", qint16 port = 5683)
 {
     currentIP = address;
@@ -18,11 +12,6 @@ BroadcastService::BroadcastService(QString address = "255.255.255.255", qint16 p
     startService();
 }
 
-//! Starts the Broadcast Service
-/*!
-    This function is called to start the BroadcastService.  It is automatically called by BroadcastService::BroadcastService
-    \return A boolean value indicating if the start succeded.
-  */
 bool BroadcastService::startService(){
     bool didConnect = false;
     client = new QUdpSocket();
@@ -38,33 +27,15 @@ bool BroadcastService::startService(){
     return didConnect;
 }
 
-//! Send a message
-/*!
-  Use this function to send a message to everyone.
-  \param message the string to be sent
-  \param type a UdpMessage::UdpMessageType specifying what type the message is
- */
 
 void BroadcastService::sendMessage(QString message, UdpMessage::UdpMessageType type){
     sendMessage(new UdpMessage(UdpUser().Anyone, message, type));
 }
 
-//! Send a message
-/*!
-  Use this function to send a message with an alias.
-  \param message the UdpMessage to be send
-  \param alias the current user's alias
-  */
 void BroadcastService::sendMessage(UdpMessage message, QString alias){
     message.SenderUser->Alias = alias;
     sendMessage(&message);
 }
-
-//! Send a message
-/*!
-  Use this function to send a UdpMessage
-  \param message the UdpMessage to send
-  */
 
 void BroadcastService::sendMessage(UdpMessage* message)
 {
@@ -73,11 +44,19 @@ void BroadcastService::sendMessage(UdpMessage* message)
     currentUser = UdpUser().getCurrentUser();
     message->SenderUser = new UdpUser(currentUser);
     QChar controlChar = UdpMessage().controlChar;
-    QString messageData = message->IntendedUser->Username.trimmed() + controlChar +
-            message->SenderUser->Username.trimmed() + controlChar +
-            message->SenderUser->Alias.trimmed() + controlChar +
-            (((int)message->MessageType)+0x30) + controlChar +
-            message->Message.trimmed();
+    QString messageData = message->IntendedUser->Username.trimmed() + controlChar + // IntendedUser
+            message->SenderUser->Username.trimmed() + controlChar +                 // SenderUser
+            message->SenderUser->Alias.trimmed() + controlChar +                    // SenderAlias
+            QString(message->SenderUser->AdminLevel + 0x30) + controlChar +        // AdminLevel
+            (((int)message->MessageType)+0x30) + controlChar +                      // MessageType
+            message->GroupName + controlChar +                                      // GroupName
+            QString(getApiLevel() + 0x30) + controlChar +                      // ApiLevel
+            message->Message.trimmed();                                             // Message
+    if(message->CustomFields.count() > 0){                                          // Custom Fields
+        for(int i = 0; i < message->CustomFields.count(); i++){
+            messageData += (controlChar + message->CustomFields[i]);
+        }
+    }
     QByteArray datagram = messageData.toUtf8();
     //QByteArray datagram = "Hello There!";
     qDebug() << QString("Sending Message:" + datagram);
@@ -91,5 +70,23 @@ void BroadcastService::processPendingDatagrams(){
              client->readDatagram(datagram.data(), datagram.size());
              emit OnMessageRecieved(UdpMessage().parseMessage(QString().fromUtf8(datagram.data(),datagram.size())));
     }
+}
+
+void BroadcastService::joinGroup(QString GroupName){
+    if(!messageGroups.contains(GroupName)){
+        messageGroups.append(GroupName);
+        qDebug() << QString("Joined Group: " + GroupName);
+    }
+}
+
+void BroadcastService::leaveGroup(QString GroupName){
+    if(messageGroups.contains(GroupName)){
+        messageGroups.removeAt(messageGroups.indexOf(GroupName));
+        qDebug() << QString("Left Group: " + GroupName);
+    }
+}
+
+int BroadcastService::getApiLevel(){
+    return API_LEVEL;
 }
 
