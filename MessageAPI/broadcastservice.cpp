@@ -28,8 +28,8 @@ bool BroadcastService::startService(){
 }
 
 
-void BroadcastService::sendMessage(QString message, UdpMessage::UdpMessageType type){
-    sendMessage(new UdpMessage(UdpUser().Anyone, message, type));
+void BroadcastService::sendMessage(QString message, UdpMessage::UdpMessageType type, QString groupname = "ALL_HOSTS"){
+    sendMessage(new UdpMessage(UdpUser().Anyone, message, type, groupname));
 }
 
 void BroadcastService::sendMessage(UdpMessage message, QString alias){
@@ -68,7 +68,12 @@ void BroadcastService::processPendingDatagrams(){
              QByteArray datagram;
              datagram.resize(client->pendingDatagramSize());
              client->readDatagram(datagram.data(), datagram.size());
-             emit OnMessageRecieved(UdpMessage().parseMessage(QString().fromUtf8(datagram.data(),datagram.size())));
+             UdpMessage* newMessage = UdpMessage().parseMessage(QString().fromUtf8(datagram.data(),datagram.size()));
+             if(newMessage->GroupName == "ALL_HOSTS"){
+                emit OnMessageRecieved(newMessage);
+             }else if(messageGroups.contains(newMessage->GroupName)){
+                emit OnMessageRecieved(newMessage);
+             }
     }
 }
 

@@ -89,7 +89,7 @@ public:
       \param user the username of the recipient user
       \param message the message to send
       */
-    UdpMessage(QString, QString);
+    UdpMessage(QString, QString, QString);
     //! UdpMessage Constructor
     /*!
       Creates a new UdpMessage.
@@ -97,7 +97,7 @@ public:
       \param message the message to send
       \param type the type of the message
       */
-    UdpMessage(QString, QString, UdpMessageType);
+    UdpMessage(QString, QString, UdpMessageType, QString);
     //! UdpMessage Constructor
     /*!
       Creates a new UdpMessage.
@@ -105,7 +105,7 @@ public:
       \param message the message to send
       \param type the type of the message
       */
-    UdpMessage(UdpUser&, QString, UdpMessageType);
+    UdpMessage(UdpUser&, QString, UdpMessageType, QString);
     //! Find UdpMessageType from QString
     /*!
       This is used to find a UdpMessage::UdpMessageType from a given string
@@ -171,7 +171,7 @@ public:
       */
     static const QChar controlChar;
 private:
-    void setupUser(QString, QString, UdpMessageType);
+    void setupUser(QString, QString, UdpMessageType, QString);
 };
 
 #endif // UDPOBJECTS_H

@@ -28,26 +28,28 @@ UdpUser::UdpUser(QString name, QString alias)
     AdminLevel = 0;
 }
 
-UdpMessage::UdpMessage(QString user, QString message){
-    setupUser(user, message, this->Unknown);
+UdpMessage::UdpMessage(QString user, QString message, QString groupname = "ALL_HOSTS"){
+    setupUser(user, message, this->Unknown, groupname);
 }
 
-UdpMessage::UdpMessage(QString user, QString message, UdpMessageType type){
-    setupUser(user, message, type);
+UdpMessage::UdpMessage(QString user, QString message, UdpMessageType type, QString groupname = "ALL_HOSTS"){
+    setupUser(user, message, type, groupname);
 }
 
-UdpMessage::UdpMessage(UdpUser& user, QString message, UdpMessageType type)
+UdpMessage::UdpMessage(UdpUser& user, QString message, UdpMessageType type, QString groupname = "ALL_HOSTS")
 {
     IntendedUser = &user;
     Message = message;
     MessageType = type;
+    GroupName = groupname;
 }
 
-void UdpMessage::setupUser(QString user, QString userMessage, UdpMessageType type)
+void UdpMessage::setupUser(QString user, QString userMessage, UdpMessageType type, QString groupname = "ALL_HOSTS")
 {
     IntendedUser = new UdpUser(user);
     Message = userMessage;
     MessageType = type;
+    GroupName = groupname;
 }
 
 UdpMessage::UdpMessageType UdpMessage::messageTypeFromString(QString type)
@@ -143,8 +145,9 @@ UdpMessage* UdpMessage::parseMessage(QString message){
     }
 
     buffer = "";
+    qDebug() << fields.count();
     for(int i = 0; i < fields.count(); i++){
-        buffer.append(fields[i] + ":");
+        buffer += QString(fields[i]) + ":";
     }
     //qDebug() << QString(newMessage->IntendedUser->Username + ":" + newMessage->SenderUser->Username +":" + newMessage->SenderUser->Alias + ":" + (((int)newMessage->MessageType)+0x30) + ":" + newMessage->Message);
     //qDebug() << (int) newMessage->MessageType;

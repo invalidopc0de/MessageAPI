@@ -3,7 +3,7 @@
 
 #define DEFAULT_PORT 5683
 #define DEFAULT_IP "255.255.255.255"
-#define API_LEVEL 1
+#define API_LEVEL 2
 
 #include <QObject>
 #include "udpobjects.h"
@@ -36,14 +36,14 @@ public:
       Use this function to send a message to everyone.
       \param message the string to be sent
       \param type a UdpMessage::UdpMessageType specifying what type the message is
+      \param groupname the group to send to event (default = "ALL_HOSTS")
      */
-    void sendMessage(QString, UdpMessage::UdpMessageType);
-
+    void sendMessage(QString, UdpMessage::UdpMessageType, QString);
 
     //! Send a message
     /*!
       Use this function to send a message with an alias.
-      \param message the UdpMessage to be send
+      \param message the UdpMessage to be sent
       \param alias the current user's alias
       */
     void sendMessage(UdpMessage, QString);
