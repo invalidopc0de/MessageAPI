@@ -60,7 +60,7 @@ void BroadcastService::sendMessage(UdpMessage* message)
     QByteArray datagram = messageData.toUtf8();
     //QByteArray datagram = "Hello There!";
     qDebug() << QString("Sending Message:" + datagram);
-    client->writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, currentPort);
+    client->writeDatagram(datagram.data(), datagram.size(), QHostAddress(currentIP), currentPort);
 }
 
 void BroadcastService::processPendingDatagrams(){

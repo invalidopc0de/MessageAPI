@@ -83,6 +83,7 @@ public:
                          Custom /*!< Message Type Custom */
                         };
     UdpMessage() {}
+
     //! UdpMessage Constructor
     /*!
       Creates a new UdpMessage.
@@ -90,6 +91,7 @@ public:
       \param message the message to send
       */
     UdpMessage(QString, QString, QString);
+
     //! UdpMessage Constructor
     /*!
       Creates a new UdpMessage.
@@ -98,6 +100,7 @@ public:
       \param type the type of the message
       */
     UdpMessage(QString, QString, UdpMessageType, QString);
+
     //! UdpMessage Constructor
     /*!
       Creates a new UdpMessage.
@@ -106,6 +109,7 @@ public:
       \param type the type of the message
       */
     UdpMessage(UdpUser&, QString, UdpMessageType, QString);
+
     //! Find UdpMessageType from QString
     /*!
       This is used to find a UdpMessage::UdpMessageType from a given string
@@ -113,6 +117,7 @@ public:
       \return a UdpMessage::UdpMessageType from the string. Returns type "Unknown" if the string doesn't match any known types
       */
     UdpMessageType messageTypeFromString(QString);
+
     virtual ~UdpMessage() {}
 
     //! Intended User

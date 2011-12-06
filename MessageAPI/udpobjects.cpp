@@ -71,53 +71,7 @@ UdpMessage::UdpMessageType UdpMessage::messageTypeFromString(QString type)
 UdpMessage* UdpMessage::parseMessage(QString message){
     message = message.trimmed();
     qDebug() << message;
-    //    int username = 0;
-    //    int sendername = 0;
-    //    int alias = 0;
-    //    bool foundUsername = false;
-    //    bool foundSenderName = false;
-    //    bool foundAliasName = false;
 
-    //    QChar x;
-    //    for(int i = 0; i<message.length(); i++)
-    //    {
-    //        x = message.at(i);
-    //        if (x == controlChar)
-    //        {
-    //            if (foundUsername == false)
-    //            {
-    //                foundUsername = true;
-    //            } else if (foundSenderName == false)
-    //            {
-    //                foundSenderName = true;
-    //            } else if (foundAliasName == false)
-    //            {
-    //                foundAliasName = true;
-    //            }
-    //            else
-    //            {
-    //                break;
-    //            }
-    //        }
-    //        else
-    //        {
-    //            if(foundUsername == false) {
-    //                username += 1;
-    //            }
-    //            else if (foundSenderName == false)
-    //            {
-    //                sendername += 1;
-    //            } else if (foundAliasName == false)
-    //            {
-    //                alias += 1;
-    //            }
-    //        }
-    //    }
-    //    UdpMessage *newMessage = new UdpMessage();
-    //    newMessage->IntendedUser = new UdpUser(message.mid(0, username));
-    //    newMessage->SenderUser = new UdpUser(message.mid(username + 1, sendername), message.mid(username + sendername + 2, alias));
-    //    newMessage->MessageType = newMessage->messageTypeFromString(message.mid((username + sendername + alias) + 3, 1));
-    //    newMessage->Message = message.mid((username + sendername + alias) + 5, (message.length() - ((username + sendername + alias) + 5)));
     QList<QString> fields;
     QString buffer;
     for(int c = 0; c < message.length(); c++){
